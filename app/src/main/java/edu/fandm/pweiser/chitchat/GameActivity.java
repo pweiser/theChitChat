@@ -507,12 +507,19 @@ public class GameActivity extends AppCompatActivity {
 
                                 }
 
-                                
+
                                 Picasso.with(getApplicationContext()).load(urls.get(0)).into(iv);
                                 Picasso.with(getApplicationContext()).load(urls.get(1)).into(iv2);
                                 Picasso.with(getApplicationContext()).load(urls.get(2)).into(iv3);
                                 Picasso.with(getApplicationContext()).load(urls.get(3)).into(iv4);
-
+                                Animation fadein = AnimationUtils.loadAnimation(ctx,R.anim.fade_in);
+                                Animation fadein2 = AnimationUtils.loadAnimation(ctx,R.anim.fade_in2);
+                                Animation fadein3 = AnimationUtils.loadAnimation(ctx,R.anim.fade_in3);
+                                Animation fadein4 = AnimationUtils.loadAnimation(ctx,R.anim.fade_in4);
+                                iv.startAnimation(fadein);
+                                iv2.startAnimation(fadein2);
+                                iv3.startAnimation(fadein3);
+                                iv4.startAnimation(fadein4);
                             }
 
                             else{
@@ -520,6 +527,14 @@ public class GameActivity extends AppCompatActivity {
                                 Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv2);
                                 Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv3);
                                 Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv4);
+                                Animation fadein = AnimationUtils.loadAnimation(ctx,R.anim.fade_in);
+                                Animation fadein2 = AnimationUtils.loadAnimation(ctx,R.anim.fade_in2);
+                                Animation fadein3 = AnimationUtils.loadAnimation(ctx,R.anim.fade_in3);
+                                Animation fadein4 = AnimationUtils.loadAnimation(ctx,R.anim.fade_in4);
+                                iv.startAnimation(fadein);
+                                iv2.startAnimation(fadein2);
+                                iv3.startAnimation(fadein3);
+                                iv4.startAnimation(fadein4);
                             }
 
                         } catch (JSONException e) {
