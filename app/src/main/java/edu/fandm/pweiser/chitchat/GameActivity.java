@@ -51,6 +51,7 @@ import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
 
+
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = "GameActivityTAG";
     ImageView iv;
@@ -75,7 +76,7 @@ public class GameActivity extends AppCompatActivity {
     private String imageUrl;
 
 
-    class Game1 implements View.OnSystemUiVisibilityChangeListener {
+    class Game1 implements View.OnSystemUiVisibilityChangeListener { //Not our code
 
         /* renamed from:C03011 */
         class Game_2 implements Runnable {
@@ -106,136 +107,6 @@ public class GameActivity extends AppCompatActivity {
             dialog.cancel();
         }
     }
-
-    /*class ImageDownloader extends AsyncTask<String, Void, Void> {
-        ImageDownloader() {
-        }
-
-        protected void onPreExecute() {
-            GameActivity.this.endSlideShow();
-        }
-
-        private void downloadImageFromURL(String URL, int idx) {
-            try {
-                InputStream in = new BufferedInputStream(new URL(URL).openStream());
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                byte[] buf = new byte[1024];
-                while (true) {
-                    int read = in.read(buf);
-                    int n = read;
-                    if (-1 != read) {
-                        out.write(buf, 0, n);
-                    } else {
-                        out.close();
-                        in.close();
-                        byte[] response = out.toByteArray();
-                        GameActivity.this.bitmaps[idx] = BitmapFactory.decodeByteArray(response, 0, response.length);
-                        return;
-                    }
-                }
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }
-
-        protected Void doInBackground(String... params) {
-            BufferedReader reader = null;
-            int i = 0;
-            String keyword = params[0];
-            String str = GameActivity.TAG;
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("Downloading image for: ");
-            stringBuilder.append(keyword);
-            Log.d(str, stringBuilder.toString());
-            try {
-                String readLine;
-                StringBuilder stringBuilder2 = new StringBuilder();
-                stringBuilder2.append("https://pixabay.com/api/?key=10898531-392d5bb44bdda418e54650675&q=");
-                stringBuilder2.append(keyword);
-                HttpURLConnection con = (HttpURLConnection) new URL(stringBuilder2.toString()).openConnection();
-                con.setRequestMethod("GET");
-                con.setDoOutput(true);
-                con.connect();
-                reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while (true) {
-                    readLine = reader.readLine();
-                    line = readLine;
-                    if (readLine == null) {
-                        break;
-                    }
-                    StringBuilder stringBuilder3 = new StringBuilder();
-                    stringBuilder3.append(line);
-                    stringBuilder3.append("\n");
-                    sb.append(stringBuilder3.toString());
-                }
-                readLine = null;
-                try {
-                    JSONArray arr = new JSONObject(sb.toString()).getJSONArray("hits");
-                    if (arr.length() == 0) {
-                        String str2 = GameActivity.TAG;
-                        StringBuilder stringBuilder4 = new StringBuilder();
-                        stringBuilder4.append("No images for: ");
-                        stringBuilder4.append(keyword);
-                        Log.d(str2, stringBuilder4.toString());
-                        GameActivity.this.endSlideShow();
-                        reader.close();
-                        return null;
-                    }
-                    while (i < 3) {
-                        downloadImageFromURL(arr.getJSONObject(i).getString("webformatURL"), i);
-                        i++;
-                    }
-
-                    try {
-                        reader.close();
-                    }
-                    catch (IOException ioe) {
-                        ioe.printStackTrace();
-                    }
-
-                    Log.d(GameActivity.TAG, "done downloading images.");
-                    return null;
-                } catch (JSONException je) {
-                    je.printStackTrace();
-                }
-            } catch (MalformedURLException mue) {
-                mue.printStackTrace();
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    }
-                    catch(IOException e) {
-                        Log.e(TAG, "IO Exception");
-                    }
-                }
-            } catch (IOException ioe2) {
-                ioe2.printStackTrace();
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    }
-                    catch(IOException e) {
-                        Log.e(TAG, "IO Exception");
-                    }
-                }
-            } catch (Throwable th) {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException ioe3) {
-                        ioe3.printStackTrace();
-                    }
-                }
-            }
-            return null;
-        }
-        protected void onPostExecute(Void v) {
-            GameActivity.this.isst = new ImageSlideShowThread();
-            GameActivity.this.isst.start();
-        }
-    }*/
 
     class ImageSlideShowThread extends Thread {
         private final long SLEEP_TIME_MS = 8000;
@@ -350,7 +221,7 @@ public class GameActivity extends AppCompatActivity {
         this.puzzle = (GridView) findViewById(R.id.words_gv);
         this.puzzle.setNumColumns(this.shown.size());
         this.puzzle.setAdapter(new ArrayAdapter(this, R.layout.cell, this.shown.toArray(new String[this.shown.size()])));
-        iv = (ImageView) findViewById(R.id.Pic);
+        iv = (ImageView) findViewById(R.id.Pic); //grabs imageviews for animation loading
         iv2 = (ImageView) findViewById(R.id.Pic2);
         iv3 = (ImageView) findViewById(R.id.Pic3);
         iv4 = (ImageView) findViewById(R.id.Pic4);
@@ -387,10 +258,10 @@ public class GameActivity extends AppCompatActivity {
 
             public void onClick(DialogInterface dialog, int which) {
                 String guess = input.getText().toString();
-                MediaPlayer mp ;
+                MediaPlayer mp ; //added mediaplayer for sound effects
                 if (guess.length() != 4) {
                     Toast.makeText(GameActivity.this.ctx, "That word is not four letters long!", Toast.LENGTH_SHORT).show();
-                    mp = MediaPlayer.create(GameActivity.this.ctx,R.raw.loss);
+                    mp = MediaPlayer.create(GameActivity.this.ctx,R.raw.loss); //sound effect plays on wrong guess
                     mp.start();
                 } else if (!WordGraph.oneLetterDiff((String) GameActivity.this.soln.get(curEmptySpot - 1), guess)) {
                     Context access$000 = GameActivity.this.ctx;
@@ -413,11 +284,15 @@ public class GameActivity extends AppCompatActivity {
                     Log.d(str, stringBuilder2.toString());
                     if (GameActivity.this.shown.equals(GameActivity.this.soln)) {
                         Log.d(GameActivity.TAG, "WHOA!");
+                        iv.clearAnimation(); //clears imageview animations and turns them invisible
+                        iv2.clearAnimation();
+                        iv3.clearAnimation();
+                        iv4.clearAnimation();
                         iv.setVisibility(View.INVISIBLE);
                         iv2.setVisibility(View.INVISIBLE);
                         iv3.setVisibility(View.INVISIBLE);
                         iv4.setVisibility(View.INVISIBLE);
-                        mp = MediaPlayer.create(GameActivity.this.ctx,R.raw.winning);
+                        mp = MediaPlayer.create(GameActivity.this.ctx,R.raw.winning); //sound effect for completion
                         mp.start();
                         Toast.makeText(GameActivity.this.ctx, "CORRECT!!", Toast.LENGTH_SHORT).show();
                         GameActivity.this.endSlideShow();
@@ -430,8 +305,8 @@ public class GameActivity extends AppCompatActivity {
                         GameActivity.this.hintIV.setOnClickListener(new C03031());
                         return;
                     }
-                    mRequestQueue = Volley.newRequestQueue(GameActivity.this.ctx);
-                    parseJSON((String) GameActivity.this.soln.get(curEmptySpot + 1));
+                    mRequestQueue = Volley.newRequestQueue(GameActivity.this.ctx); //creates new requestQueue
+                    parseJSON((String) GameActivity.this.soln.get(curEmptySpot + 1)); //grabs 4 images related to word
                 } else {
                     mp = MediaPlayer.create(GameActivity.this.ctx,R.raw.loss);
                     mp.start();
@@ -446,8 +321,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         hide(null);
-        mRequestQueue = Volley.newRequestQueue(GameActivity.this.ctx);
-        parseJSON((String) this.soln.get(1));
+        mRequestQueue = Volley.newRequestQueue(GameActivity.this.ctx); //creates new requestQueue
+        parseJSON((String) this.soln.get(1)); //grabs 4 images related to word
     }
 
     public void hint(View v) {
@@ -481,7 +356,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void parseJSON(String search){
+    private void parseJSON(String search){ //searches for images related to paramete and loads them into the imageviews
         urls = new ArrayList<>();
         String url = "https://pixabay.com/api/?key=11808353-f5278657ea770ee748fef170a&q=";
         url += search;
@@ -508,7 +383,7 @@ public class GameActivity extends AppCompatActivity {
                                 }
 
 
-                                Picasso.with(getApplicationContext()).load(urls.get(0)).into(iv);
+                                Picasso.with(getApplicationContext()).load(urls.get(0)).into(iv); //loads images from array and starts fade in animation
                                 Picasso.with(getApplicationContext()).load(urls.get(1)).into(iv2);
                                 Picasso.with(getApplicationContext()).load(urls.get(2)).into(iv3);
                                 Picasso.with(getApplicationContext()).load(urls.get(3)).into(iv4);
@@ -522,7 +397,7 @@ public class GameActivity extends AppCompatActivity {
                                 iv4.startAnimation(fadein4);
                             }
 
-                            else{
+                            else{ //loads images from url and starts fade in animation
                                 Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv);
                                 Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv2);
                                 Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv3);

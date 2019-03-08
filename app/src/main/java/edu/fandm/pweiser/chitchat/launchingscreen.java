@@ -28,7 +28,7 @@ public class launchingscreen extends AppCompatActivity {
 
     }
 
-    @Override
+    @Override //Inflates menu for activity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_launch, menu);
@@ -36,54 +36,51 @@ public class launchingscreen extends AppCompatActivity {
     }
 
 
-    @Override //Defines behavior for play, save, and view list
+    @Override //defines behavior for clicking settings
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.action_settings:
-                return true;
-
-            case R.id.explaination:
-                return true;
-
-            case R.id.action_about:
-
-                return true;
-            case R.id.colorPallet:
-
+                openSettings();
                 return true;
 
             default:
-                return super.onOptionsItemSelected(item);
+                return false;
 
         }
     }
 
-    public void openPopup(View v)
+    public void openPopup(View v) //opens the how to play pop up
     {
         Intent i = new Intent(this, Explain.class);
         startActivity(i);
     }
 
+    public void openSettings() //opens the settings activity
+    {
+        Intent i = new Intent(this, Settings.class);
+        startActivity(i);
+    }
 
-    public void GameLaunch(View v){
+
+    public void GameLaunch(View v){ //lanunches game activity with sequence length correlated with difficulty
         Button b = (Button) v;
         Intent intent = new Intent(this, LaunchActivity.class);
         String difficulty = b.getText().toString();
 
         switch(difficulty){
             case "Easy":
-                Toast.makeText(this,"PassingIntent",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"PassingIntent",Toast.LENGTH_SHORT).show();
                 intent.putExtra("seq", 3);
                 startActivity(intent);
                 break;
             case "Medium":
-                Toast.makeText(this,"PassingIntent",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"PassingIntent",Toast.LENGTH_SHORT).show();
                 intent.putExtra("seq", 4);
                 startActivity(intent);
                 break;
             case "Hard":
-                Toast.makeText(this,"PassingIntent",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"PassingIntent",Toast.LENGTH_SHORT).show();
                 intent.putExtra("seq", 5);
                 startActivity(intent);
                 break;

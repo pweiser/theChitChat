@@ -4,6 +4,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Iterator;
 /** This Code is not ours and  was taken from decompiled souce code of wordly.apk */
+/** code we edited: testcode**/
 class WordGraph
 {
     public static final String TAG = "WordGraph";

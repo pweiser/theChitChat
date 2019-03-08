@@ -37,10 +37,10 @@ public class LaunchActivity extends AppCompatActivity
     private SharedPreferences prefs;
     private EditText startET;
     private WordGraph wordGraph;
-    private int seqLen;
+    private int seqLen; //var added and set based on difficulty
 
 
-    class Launch1 implements TextWatcher {
+    class Launch1 implements TextWatcher { //Not our code
         Launch1() {
         }
 
@@ -59,7 +59,7 @@ public class LaunchActivity extends AppCompatActivity
         }
     }
 
-    class FindSolutionTask extends AsyncTask<String, Void, ArrayList<String>> {
+    class FindSolutionTask extends AsyncTask<String, Void, ArrayList<String>> { //Not Our Code
         private String end;
         private String start;
         private View tv;
@@ -129,7 +129,7 @@ public class LaunchActivity extends AppCompatActivity
         }
     }
 
-    class GenPuzzleTask extends AsyncTask<Integer, Void, String[]> {
+    class GenPuzzleTask extends AsyncTask<Integer, Void, String[]> { //Not our code
         private View tv;
 
         GenPuzzleTask() {
@@ -182,7 +182,7 @@ public class LaunchActivity extends AppCompatActivity
             while (startAndEnd[1] == null) {
                 startAndEnd[0] = wg.getRandomWord();
                 try {
-                    startAndEnd[1] = genSequence(startAndEnd[0], seqLen);
+                    startAndEnd[1] = genSequence(startAndEnd[0], seqLen); //added seqLen for # of steps specified by difficulty
                 }
                 catch (IllegalStateException ise)
                 {
@@ -210,13 +210,9 @@ public class LaunchActivity extends AppCompatActivity
     }
 
     protected void onCreate(Bundle savedInstanceState) {
-        Toast.makeText(this,"startingCreate",Toast.LENGTH_SHORT).show();
         super.onCreate(savedInstanceState);
-        Toast.makeText(this,"gettingIntent",Toast.LENGTH_SHORT).show();
         Intent intent = getIntent();
-        Toast.makeText(this,"gettingSeq",Toast.LENGTH_SHORT).show();
-        seqLen = intent.getIntExtra("seq", 3);
-        Toast.makeText(this, "The seqLen is " + seqLen, Toast.LENGTH_SHORT).show();
+        seqLen = intent.getIntExtra("seq", 3); //grabed newly added seqLen
         setContentView(R.layout.activity_launch);
         // modified from setContentView(C0310R.layout.activity_launch);
         this.ctx = getApplicationContext();
@@ -251,7 +247,6 @@ public class LaunchActivity extends AppCompatActivity
         findViewById(R.id.tv_loading).setVisibility(View.VISIBLE);
         if (this.prefs.getBoolean("firstrun", true)) {
             this.prefs.edit().putBoolean("firstrun", false).commit();
-            startActivity(new Intent(this.ctx, ExplainActivity.class));
         }
     }
 
@@ -305,7 +300,7 @@ public class LaunchActivity extends AppCompatActivity
         return this.wordGraph;
     }
 
-    @Override
+    @Override //goes back to mode activity on back pressed
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(this, launchingscreen.class);

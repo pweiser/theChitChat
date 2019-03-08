@@ -4,12 +4,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
-public class Explain extends AppCompatActivity {
+public class AboutPopup extends AppCompatActivity {
 
-    @Override //Opens a how to play pop up on screen
+    @Override //creates a pop up window giving credits for the app and images
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_explain2);
+        setContentView(R.layout.activity_about_popup);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -17,6 +17,6 @@ public class Explain extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width*.75), (int)(height * .8));
+        getWindow().setLayout((int)(width*.75), (int)(height * .75));
     }
 }

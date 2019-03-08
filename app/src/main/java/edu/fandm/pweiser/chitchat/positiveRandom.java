@@ -5,6 +5,7 @@ import java.util.Random;
 public class positiveRandom {
 
     /** This code was taken from decompiled worldy.apk */
+    /**code that we editted: Lines 3,21, and 29**/
 
     public static final String TAG = "positiveRandom";
     private static Random r;

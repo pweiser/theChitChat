@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/all"
-    android:background="#000000"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/paarsenblauwgewevenachtergrondbehangappachtergrondlayout">
 
 
     <GridView
         android:gravity="center"
         android:id="@+id/words_gv"
-        android:background="#ffb7d9e5"
         android:paddingTop="10.0dip"
         android:paddingBottom="10.0dip"
         android:layout_width="fill_parent"
