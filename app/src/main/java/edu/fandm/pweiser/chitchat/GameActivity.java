@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,11 +42,26 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 
-/**  changed name to GameActivity */
 public class GameActivity extends AppCompatActivity {
-    public static final String TAG = "GameActivity";
+    public static final String TAG = "GameActivityTAG";
+    ImageView iv;
+    ImageView iv2;
+    ImageView iv3;
+    ImageView iv4;
+    private String Url;
+    private ArrayList<String> urls;
+    private RequestQueue rq;
+    private String search;
+    private RequestQueue mRequestQueue;
 
     private View all;
     private Bitmap[] bitmaps = new Bitmap[3];
@@ -56,6 +72,7 @@ public class GameActivity extends AppCompatActivity {
     private GridView puzzle;
     private ArrayList<String> shown;
     private ArrayList<String> soln;
+    private String imageUrl;
 
 
     class Game1 implements View.OnSystemUiVisibilityChangeListener {
@@ -90,7 +107,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    class ImageDownloader extends AsyncTask<String, Void, Void> {
+    /*class ImageDownloader extends AsyncTask<String, Void, Void> {
         ImageDownloader() {
         }
 
@@ -218,7 +235,7 @@ public class GameActivity extends AppCompatActivity {
             GameActivity.this.isst = new ImageSlideShowThread();
             GameActivity.this.isst.start();
         }
-    }
+    }*/
 
     class ImageSlideShowThread extends Thread {
         private final long SLEEP_TIME_MS = 8000;
@@ -333,6 +350,10 @@ public class GameActivity extends AppCompatActivity {
         this.puzzle = (GridView) findViewById(R.id.words_gv);
         this.puzzle.setNumColumns(this.shown.size());
         this.puzzle.setAdapter(new ArrayAdapter(this, R.layout.cell, this.shown.toArray(new String[this.shown.size()])));
+        iv = (ImageView) findViewById(R.id.Pic);
+        iv2 = (ImageView) findViewById(R.id.Pic2);
+        iv3 = (ImageView) findViewById(R.id.Pic3);
+        iv4 = (ImageView) findViewById(R.id.Pic4);
     }
 
     private int getCurrentEmptySpot() {
@@ -355,7 +376,6 @@ public class GameActivity extends AppCompatActivity {
         builder.setView(input);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
-            /* renamed from: edu.fandm.enovak.wordly.Game$2$1 */
             class C03031 implements View.OnClickListener {
                 C03031() {
                 }
@@ -367,14 +387,19 @@ public class GameActivity extends AppCompatActivity {
 
             public void onClick(DialogInterface dialog, int which) {
                 String guess = input.getText().toString();
+                MediaPlayer mp ;
                 if (guess.length() != 4) {
                     Toast.makeText(GameActivity.this.ctx, "That word is not four letters long!", Toast.LENGTH_SHORT).show();
+                    mp = MediaPlayer.create(GameActivity.this.ctx,R.raw.loss);
+                    mp.start();
                 } else if (!WordGraph.oneLetterDiff((String) GameActivity.this.soln.get(curEmptySpot - 1), guess)) {
                     Context access$000 = GameActivity.this.ctx;
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append("That word is not one letter different from ");
                     stringBuilder.append((String) GameActivity.this.soln.get(curEmptySpot - 1));
                     stringBuilder.append("!");
+                    mp = MediaPlayer.create(GameActivity.this.ctx,R.raw.loss);
+                    mp.start();
                     Toast.makeText(access$000, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
                 } else if (guess.equals(GameActivity.this.soln.get(curEmptySpot))) {
                     GameActivity.this.shown.set(curEmptySpot, guess);
@@ -388,19 +413,28 @@ public class GameActivity extends AppCompatActivity {
                     Log.d(str, stringBuilder2.toString());
                     if (GameActivity.this.shown.equals(GameActivity.this.soln)) {
                         Log.d(GameActivity.TAG, "WHOA!");
+                        iv.setVisibility(View.INVISIBLE);
+                        iv2.setVisibility(View.INVISIBLE);
+                        iv3.setVisibility(View.INVISIBLE);
+                        iv4.setVisibility(View.INVISIBLE);
+                        mp = MediaPlayer.create(GameActivity.this.ctx,R.raw.winning);
+                        mp.start();
                         Toast.makeText(GameActivity.this.ctx, "CORRECT!!", Toast.LENGTH_SHORT).show();
                         GameActivity.this.endSlideShow();
                         ((Button) GameActivity.this.findViewById(R.id.game_butt_hint)).setVisibility(View.VISIBLE);
                         GameActivity.this.hintIV.setVisibility(View.INVISIBLE);
                         GameActivity.this.hintIV.setImageResource(R.drawable.star);
-                        //GameActivity.this.hintIV.setBackground(null);
+                        GameActivity.this.hintIV.setBackground(null);
                         GameActivity.this.hintIV.setAnimation(AnimationUtils.loadAnimation(GameActivity.this.ctx, R.anim.spin));
                         GameActivity.this.hintIV.animate();
                         GameActivity.this.hintIV.setOnClickListener(new C03031());
                         return;
                     }
-                    new ImageDownloader().execute(new String[]{(String) GameActivity.this.soln.get(curEmptySpot + 1)});
+                    mRequestQueue = Volley.newRequestQueue(GameActivity.this.ctx);
+                    parseJSON((String) GameActivity.this.soln.get(curEmptySpot + 1));
                 } else {
+                    mp = MediaPlayer.create(GameActivity.this.ctx,R.raw.loss);
+                    mp.start();
                     Toast.makeText(GameActivity.this.ctx, "That's not the word I'm thinking of!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -412,7 +446,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         hide(null);
-        new ImageDownloader().execute(new String[]{(String) this.soln.get(1)});
+        mRequestQueue = Volley.newRequestQueue(GameActivity.this.ctx);
+        parseJSON((String) this.soln.get(1));
     }
 
     public void hint(View v) {
@@ -444,5 +479,63 @@ public class GameActivity extends AppCompatActivity {
             this.isst.interrupt();
             this.isst = null;
         }
+    }
+
+    private void parseJSON(String search){
+        urls = new ArrayList<>();
+        String url = "https://pixabay.com/api/?key=11808353-f5278657ea770ee748fef170a&q=";
+        url += search;
+        Log.d(TAG,url);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("hits");
+                            if(jsonArray.length()>0) {
+                                Log.d(TAG, ""+jsonArray.length());
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    Log.d(TAG, ""+i);
+                                    JSONObject hit = jsonArray.getJSONObject(i);
+
+                                    imageUrl = hit.getString("webformatURL");
+                                    Log.d(TAG,imageUrl);
+                                    Log.d(TAG,""+imageUrl.length());
+
+                                    urls.add(imageUrl);
+
+                                }
+
+                                
+                                Picasso.with(getApplicationContext()).load(urls.get(0)).into(iv);
+                                Picasso.with(getApplicationContext()).load(urls.get(1)).into(iv2);
+                                Picasso.with(getApplicationContext()).load(urls.get(2)).into(iv3);
+                                Picasso.with(getApplicationContext()).load(urls.get(3)).into(iv4);
+
+                            }
+
+                            else{
+                                Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv);
+                                Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv2);
+                                Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv3);
+                                Picasso.with(getApplicationContext()).load("https://pixabay.com/get/eb35b70e29f7033ed1584d05fb1d4797eb77ead61cb20c4090f5c379a6efb5bcde_640.png").into(iv4);
+                            }
+
+                        } catch (JSONException e) {
+                            Log.d(TAG, "FIRST CATCH");
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "ERROR");
+                error.printStackTrace();
+            }
+        });
+        Log.d(TAG, "AT END");
+        mRequestQueue.add(request);
+
     }
 }

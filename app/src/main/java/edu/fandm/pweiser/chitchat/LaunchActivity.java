@@ -37,6 +37,7 @@ public class LaunchActivity extends AppCompatActivity
     private SharedPreferences prefs;
     private EditText startET;
     private WordGraph wordGraph;
+    private int seqLen;
 
 
     class Launch1 implements TextWatcher {
@@ -181,7 +182,7 @@ public class LaunchActivity extends AppCompatActivity
             while (startAndEnd[1] == null) {
                 startAndEnd[0] = wg.getRandomWord();
                 try {
-                    startAndEnd[1] = genSequence(startAndEnd[0], 3);
+                    startAndEnd[1] = genSequence(startAndEnd[0], seqLen);
                 }
                 catch (IllegalStateException ise)
                 {
@@ -209,7 +210,13 @@ public class LaunchActivity extends AppCompatActivity
     }
 
     protected void onCreate(Bundle savedInstanceState) {
+        Toast.makeText(this,"startingCreate",Toast.LENGTH_SHORT).show();
         super.onCreate(savedInstanceState);
+        Toast.makeText(this,"gettingIntent",Toast.LENGTH_SHORT).show();
+        Intent intent = getIntent();
+        Toast.makeText(this,"gettingSeq",Toast.LENGTH_SHORT).show();
+        seqLen = intent.getIntExtra("seq", 3);
+        Toast.makeText(this, "The seqLen is " + seqLen, Toast.LENGTH_SHORT).show();
         setContentView(R.layout.activity_launch);
         // modified from setContentView(C0310R.layout.activity_launch);
         this.ctx = getApplicationContext();
@@ -262,7 +269,7 @@ public class LaunchActivity extends AppCompatActivity
         try {
             //fIn = getAssets().open("words_simple.txt");
             //used get resources as recommended by https://developer.android.com/reference/android/content/res/Resources
-            fIn = getResources().openRawResource(R.raw.words_gwicks);
+            fIn = getResources().openRawResource(R.raw.words_simple);
             iSr = new InputStreamReader(fIn);
             input = new BufferedReader(iSr);
             String line;
@@ -296,5 +303,12 @@ public class LaunchActivity extends AppCompatActivity
         }
 
         return this.wordGraph;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, launchingscreen.class);
+        startActivity(intent);
     }
 }
